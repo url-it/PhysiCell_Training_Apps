@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+###############################################################################
+# If you use PhysiCell in your project, please cite PhysiCell and the version #
+# number, such as below:                                                      #
+#                                                                             #
+# We implemented and solved the model using PhysiCell (Version x.y.z) [1].    #
+#                                                                             #
+# [1] A Ghaffarizadeh, R Heiland, SH Friedman, SM Mumenthaler, and P Macklin, #
+#     PhysiCell: an Open Source Physics-Based Cell Simulator for Multicellu-  #
+#     lar Systems, PLoS Comput. Biol. 14(2): e1005991, 2018                   #
+#     DOI: 10.1371/journal.pcbi.1005991                                       #
+#                                                                             #
+# See VERSION.txt or call get_PhysiCell_version() to get the current version  #
+#     x.y.z. Call display_citations() to get detailed information on all cite-#
+#     able software used in your PhysiCell application.                       #
+#                                                                             #
+# Because PhysiCell extensively uses BioFVM, we suggest you also cite BioFVM  #
+#     as below:                                                               #
+#                                                                             #
+# We implemented and solved the model using PhysiCell (Version x.y.z) [1],    #
+# with BioFVM [2] to solve the transport equations.                           #
+#                                                                             #
+# [1] A Ghaffarizadeh, R Heiland, SH Friedman, SM Mumenthaler, and P Macklin, #
+#     PhysiCell: an Open Source Physics-Based Cell Simulator for Multicellu-  #
+#     lar Systems, PLoS Comput. Biol. 14(2): e1005991, 2018                   #
+#     DOI: 10.1371/journal.pcbi.1005991                                       #
+#                                                                             #
+# [2] A Ghaffarizadeh, SH Friedman, and P Macklin, BioFVM: an efficient para- #
+#     llelized diffusive transport solver for 3-D biological simulations,     #
+#     Bioinformatics 32(8): 1256-8, 2016. DOI: 10.1093/bioinformatics/btv730  #
+#                                                                             #
+###############################################################################
+#                                                                             #
+# BSD 3-Clause License (see https://opensource.org/licenses/BSD-3-Clause)     #
+#                                                                             #
+# Copyright (c) 2015-2018, Paul Macklin and the PhysiCell Project             #
+# All rights reserved.                                                        #
+#                                                                             #
+# Redistribution and use in source and binary forms, with or without          #
+# modification, are permitted provided that the following conditions are met: #
+#                                                                             #
+# 1. Redistributions of source code must retain the above copyright notice,   #
+# this list of conditions and the following disclaimer.                       #
+#                                                                             #
+# 2. Redistributions in binary form must reproduce the above copyright        #
+# notice, this list of conditions and the following disclaimer in the         #
+# documentation and/or other materials provided with the distribution.        #
+#                                                                             #
+# 3. Neither the name of the copyright holder nor the names of its            #
+# contributors may be used to endorse or promote products derived from this   #
+# software without specific prior written permission.                         #
+#                                                                             #
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" #
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   #
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  #
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE   #
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR         #
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF        #
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    #
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN     #
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)     #
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  #
+# POSSIBILITY OF SUCH DAMAGE.                                                 #
+#                                                                             #
+###############################################################################
+*/
+--> 
+
+<!--
+<user_details />
+-->
+
+<PhysiCell_settings version="devel-version">
+	<domain>
+		<x_min>-30</x_min>
+		<x_max>30</x_max>
+		<y_min>-30</y_min>
+		<y_max>30</y_max>
+		<z_min>-10</z_min>
+		<z_max>10</z_max>
+		<dx>10</dx>
+		<dy>10</dy>
+		<dz>10</dz>
+		<use_2D>true</use_2D>
+	</domain>
+	
+	<overall>
+		<max_time units="min">1440</max_time> <!--  24hrs *60 min -->
+		<time_units>min</time_units>
+		<space_units>micron</space_units>
+	</overall>
+	
+	<parallel>
+		<omp_num_threads>4</omp_num_threads>
+	</parallel> 
+	
+	<save>
+		<folder>.</folder> <!-- use . for root --> 
+
+		<full_data>
+			<interval units="min">10</interval>
+			<enable>false</enable>
+		</full_data>
+		
+		<SVG>
+			<interval units="min">10</interval>
+			<enable>true</enable>
+		</SVG>
+		
+		<legacy_data>
+			<enable>false</enable>
+		</legacy_data>
+	</save>
+	
+	<microenvironment_setup>
+		<variable name="oxygen" units="mmHg" ID="0">
+			<physical_parameter_set>
+				<diffusion_coefficient units="micron^2/min">100000.0</diffusion_coefficient>
+				<decay_rate units="1/min">0.1</decay_rate>  
+			</physical_parameter_set>
+			<initial_condition units="mmHg">38.0</initial_condition>
+			<Dirichlet_boundary_condition units="mmHg" enabled="true">38.0</Dirichlet_boundary_condition>
+		</variable>
+		
+		<options>
+			<calculate_gradients>false</calculate_gradients>
+			<track_internalized_substrates_in_each_agent>false</track_internalized_substrates_in_each_agent>
+			<!-- not yet supported --> 
+			<initial_condition type="matlab" enabled="false">
+				<filename>./config/initial.mat</filename>
+			</initial_condition>
+			<!-- not yet supported --> 
+			<dirichlet_nodes type="matlab" enabled="false">
+				<filename>./config/dirichlet.mat</filename>
+			</dirichlet_nodes>
+		</options>
+	</microenvironment_setup>	
+	
+	<user_parameters>
+		<random_seed type="int" units="dimensionless" hidden="true">0</random_seed> 
+		<!-- example parameters from the template --> 
+		
+		<!-- motile cell type parameters --> 
+		<!--Volume_Parameters type="string" description="Modifying these variables will affect the volume of cells in simulation" >"Parameters"</Volume_Parameters -->
+		
+		<div_initialization type="divider" description="---Parameters---"/>
+		<Volume_target_solid_cytoplasmic type="double" units="cubic_micron" description="default=1488.5">1488.5</Volume_target_solid_cytoplasmic>
+		<Volume_target_solid_nuclear type="double" units="cubic_micron"  description="default=1135.0">1135.0</Volume_target_solid_nuclear>
+		<Volume_target_fluid_fraction type="double" units="cubic_micron"  description="default=0.75">0.75</Volume_target_fluid_fraction>
+		<Volume_cytoplasmic_biomass_change_rate type="double" units="1/min"  description="default=0.0045">0.0045</Volume_cytoplasmic_biomass_change_rate>
+		<Volume_nuclear_biomass_change_rate type="double" units="1/min"  description="default=0.0055">0.0055</Volume_nuclear_biomass_change_rate>
+		<Volume_fluid_change_rate type="double" units="1/min"  description="default=0.05">0.05</Volume_fluid_change_rate>
+		<Volume_calcification_rate type="double" units="1/min"  description="default=0.0">0.0</Volume_calcification_rate>
+		
+		<!--Volume_State_Variables type="string" Description="Modifying these variables will affect the volume of cells temporarily and cells will go back to steady state volume" >"State Variables"</Volume_State_Variables-->
+		<div_initialization type="divider" description="---State Variables---"/>
+		<Volume_Total type="double" units="cubic_micron"  description="default=2494">2494</Volume_Total>
+		<Volume_solid type="double" units="cubic_micron"  description="default=623.5">623.5</Volume_solid>
+		<Volume_fluid type="double" units="cubic_micron"  description="default=1870.5">1870.5</Volume_fluid>
+		<Volume_fluid_fraction type="double" units="none"  description="default=0.75">0.75</Volume_fluid_fraction>
+		<Volume_nuclear type="double" units="cubic_micron"  description="default=540.0">540.0</Volume_nuclear>
+		<Volume_nuclear_solid type="double" units="cubic_micron"  description="default=135.0">135.0</Volume_nuclear_solid>
+		<Volume_nuclear_fluid type="double" units="cubic_micron"  description="default=405.0">405.0</Volume_nuclear_fluid>
+		<Volume_cytoplasmic type="double" units="cubic_micron"  description="default=1954.0">1954.0</Volume_cytoplasmic>
+		<Volume_cytoplasmic_solid type="double" units="cubic_micron"  description="default=488.5">488.5</Volume_cytoplasmic_solid>
+		<Volume_cytoplasmic_fluid type="double" units="cubic_micron"  description="default=1465.5">1465.5</Volume_cytoplasmic_fluid>
+		<Volume_clacification_fraction type="double" units="none"  description="default=0.0">0.0</Volume_clacification_fraction>
+		<Volume_cytoplasmic_to_nuclear_ratio type="double" units="none"  description="default=3.6">3.6</Volume_cytoplasmic_to_nuclear_ratio>
+
+		
+		<Volume_relative_rupture_volume type="double" units="none" hidden="true">2.0</Volume_relative_rupture_volume>
+		<Volume_rupture_volume type="double" units="cubic_micron" hidden="true">4988</Volume_rupture_volume>
+		<div_initialization type="divider" description="---Method to change all Volume parameters consistenly ---"/>
+		<use_function_multiply_by_ratio type="bool" description="recommended method to change volume in your simulation">false</use_function_multiply_by_ratio>
+		<multiplication_ratio_value type="double" description="multiplies all parameters accordingly to scale current volume" >2.0</multiplication_ratio_value>
+		
+		
+
+	</user_parameters>
+	
+</PhysiCell_settings>
