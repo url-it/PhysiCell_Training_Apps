@@ -16,19 +16,21 @@ Notable recognition:
 
 ## Installation
 
-No installation is required. All apps utlitze Google Colab, which is a free cloud-based Jupyter notebook environment. To run an app, you may simply copy the URL of the app and paste it into the Colab notebook URL field, specifically the Github option.
+No installation is required. All apps utlitze Google Colab, which is a free cloud-based Jupyter notebook environment. To run an app, you may simply copy the URL of the app and paste it into the Colab notebook URL field, specifically the Github option, highlighted in yellow.
 
-![Colab](PhysiCell_Training_Apps/assets/colab_starter_page.png)
+![Colab](assets/colab_starter_page.png)
 
-![Github](PhysiCell_Training_Apps/assets/github_url_insert.png)
+![Github](assets/github_url_insert.png)
 
 ### Apps
 
-1. [Basic Cell Mechanics]()
-2. [Cell Microenviroment Models]()
-3. [Cell Motility Models]()
-4. [Cell Secretion Models]()
-5. [Cell Volumes Models]()
-6. [Cell DeathModels]()
+1. [Basic Cell Mechanics](tr_Mechanics)
+2. [Cell Microenviroment Models](tr_Microenvironment)
+3. [Cell Motility Models](tr_Motility)
+4. [Cell Secretion Models](tr_Secretion)
+5. [Cell Volumes Models](tr_Volume)
+6. [Cell Death Models](tr_Death)
+
+## Links
 
 You are also welcome to clone each app to your local machine and run it on Colab from your Google Drive.
