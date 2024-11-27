@@ -16,7 +16,7 @@ Notable recognition:
 
 ## Installation
 
-No installation is required. All apps utlitze Google Colab, which is a free cloud-based Jupyter notebook environment. To run an app, you may simply copy the URL of the app and paste it into the Colab notebook URL field, specifically the Github option, highlighted in yellow.
+No installation is required. All apps utlitze Google Colab, which is a free cloud-based Jupyter notebook environment. To run an app, you may simply copy the URL of the app and paste it into the Colab notebook URL field, specifically the Github option.
 
 ![Colab](assets/colab_starter_page.png)
 
@@ -32,5 +32,10 @@ No installation is required. All apps utlitze Google Colab, which is a free clou
 6. [Cell Death Models](tr_Death)
 
 ## Links
+
+As mentioned above, each app is a self-contained example that demonstrates a specific feature of PhysiCell. The apps are designed to be used in conjunction with the PhysiCell documentation and tutorials. The links to the apps are as follows, and you will need to copy and paste them into the Colab notebook URL field, highlighted in yellow.
+
+5.
+6. https://github.com/url-it/PhysiCell_Training_Apps/blob/main/tr_Death/examples/tr_Death_Models_Training.ipynb
 
 You are also welcome to clone each app to your local machine and run it on Colab from your Google Drive.
