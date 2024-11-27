@@ -35,6 +35,10 @@ No installation is required. All apps utlitze Google Colab, which is a free clou
 
 As mentioned above, each app is a self-contained example that demonstrates a specific feature of PhysiCell. The apps are designed to be used in conjunction with the PhysiCell documentation and tutorials. The links to the apps are as follows, and you will need to copy and paste them into the Colab notebook URL field, highlighted in yellow.
 
+1. https://github.com/url-it/PhysiCell_Training_Apps/blob/main/tr_Mechanics/examples/tr_mechanics.ipynb
+2. https://github.com/url-it/PhysiCell_Training_Apps/blob/main/tr_Microenvironment/examples/tr_microenvironment.ipynb
+3.
+4.
 5.
 6. https://github.com/url-it/PhysiCell_Training_Apps/blob/main/tr_Death/examples/tr_Death_Models_Training.ipynb
 
