@@ -1,0 +1,106 @@
+<h2 id="GUI_overview"><strong>Cycle App</strong></h2>
+
+<p>
+This app demonstrates how does cell cycling work in PhysiCell.
+</p>
+
+<h2><strong>Introduction</strong></h2>
+
+<p>
+PhysiCell stores numbers of pre-defined cell cycle models. They consist of phases and phases links. The transition rates define how fast cells change their phases. As default, PhysiCell utilizes mean transition rates as stochastic durations; however, they can be specified as fixed duration. In addition, arrest functions can be applied to not allow transition happening.
+
+</p>
+<p>
+In this app, flow cytometry separated cycle model, which has 4 phases and 4 phase-links, is used. Using <b>User Params</b> tab, you can change the transition rate values. Colors of the cells show which phases that are cells in. Color code:
+
+<ul style="font-family: courier;">
+    <li><span style="height: 25px; width: 25px; background-color: rgb(230,97,1); display: inline-block; border-radius: 50%; border: 1px solid black;"></span> G<sub>0</sub>/G<sub>1</sub> Phase</li>
+    <li><span style="height: 25px; width: 25px; background-color: rgb(253,184,99); display: inline-block; border-radius: 50%; border: 1px solid black;"></span> S Phase</li>
+    <li><span style="height: 25px; width: 25px; background-color: rgb(178,171,210); display: inline-block; border-radius: 50%; border: 1px solid black;"></span> G<sub>2</sub> Phase</li>
+    <li><span style="height: 25px; width: 25px; background-color: rgb(94,60,153); display: inline-block; border-radius: 50%; border: 1px solid black;"></span> M Phase </li>
+</ul>
+</p>
+<p>
+This app is specifically designed to show cell cycling app. Parameters in User Params tab:
+<ul>
+    <li><strong>Seeding Method</strong> has two options to specify type of seeding. "1" is for seeding only one cell in the beginning. "2" is for organoid/tissue type of seeding to experience cell cycling behaviors of population of cells.</li>
+
+    <li><strong>Transition rates</strong>, which are named as r<sub>01</sub>, r<sub>12</sub>, r<sub>23</sub>, and r<sub>30</sub>, determines phase-link durations. For the stochastic cell cycling, these are the mean rates to be used in calculation of probability for passing to next phase. For the fixed rates, duration can be directly calculated with [1/rate]. As default, all rates are defined as 0.016666 which corresponding to 1-hour phase transition duration. </li>
+    <li><strong>Boolean fixed durations</strong> set transition rates to fixed rates.</li>
+
+    <li><strong>Arrest Functions</strong> can be utilized to halt transitioning phase-link in a specific conditions.</li>
+
+    <li><strong>r<sub>01</sub> arrest function </strong> is based on oxygen level. If it is employed and oxygen level in the voxel that cell is placed, it cannot pass to S phase from G<sub>0</sub>/G<sub>1</sub> Phase. Oxygen threshold can be determined in the same section.</li>
+    <li><strong>Oxygen Gradient</strong> parameter is boolean to control what type of microenvironment is defined. Please keep in mind, microenvironmental conditions can be specified in microenvironment tab. However, if oxygen gradient is on, oxygen is provided as gradient in it. Don't forget to visualize microenvironment if you are using this parameter.</li>
+
+    <li><strong>r<sub>12</sub> arrest function </strong> has similar approach but unlikely requirement of oxygen, if chemokine concentration is higher than the threshold, cells cannot proceed to next phase. </li>
+    
+    <li><strong>r<sub>23</sub> arrest function </strong> depends on pressure level. If cells experienced pressure higher than threshod, they stop transitioning to next phase. We recommend using this arrest function with organoid type of seeding method. </li>
+    
+    <li><strong>r<sub>30</sub> arrest function </strong> takes into volume threshold. In other words, cells can not proceed division when they could not have enough total volume.  </li>
+ </ul>
+</p>
+
+<p>
+As a part of Training Apps, we provide some educational scenarios. These would help you to experience different parameter sets and model approaches.
+<ol>
+    <li><strong>Single Cell Demo:</strong> Please use default parameters and visualize cell cycling. We suggest that trying different transition rates valus for four different phase link transition rates. In addition, please use fixed duration, too.</li>
+    
+    <li><strong>Organoid Demo:</strong> Please change seeding method to "2". Let's keep all transition rates stochastic in the beginning. After simulation is done, you will see an heterogenic distribution of cells that even though cells started with same phase and had same transition rate. This is reasoned by mean transition rates. Next, please turn on fixed duration for r<sub>01</sub> and start simulation again. You will see that all cells pass the first phase in the same time. It might be helpful to change transition rates and visualize tissue level trends.</li>
+    <li><strong>Oxygen Arrest Function:</strong> Before we start to this scenario, please change all values to the default values or simply refresh the page. Please turn on the r<sub>01</sub> arrest function and start the simulation. What do you see? Cell is not proceeding to next phase. This is because of lack of oxygen in the microenvironment. Please take a look to <strong>Microenvironment Tab</strong>. Oxygen is initialized as 20 while threshold level is 24. Please increase the oxygen level in the <strong> Microenvironment Tab </strong> and visualize the results. 
+    <p> For the next sub-scenario, please seed organoid, then, make oxygen gradient boolean true. Visualize the result. As you see, the right part of tissue is not transitioning. Please, visualize the microenvironment, too. To do that, just check the <strong>"Substrates"</strong> box at the <strong>Out:Plots Tab</strong>.</p> </li>
+    <li><strong>Chemokine Arrest Function:</strong> Please turn to default values or refresh the page before simulation. We encourage to use tissue seeding in this demo. It is a reverse scenario of oxygen, where chemokine is stalling transition. This might be very simple version of quorum sensing, where bacteria slows significantly when quorum-signalling molecules are high in microenvironment.</li>
+    <li><strong>Pressure and Volume:</strong> Likewise, this arrest functions can be seen better in organoid seeding. Because cells keeps dividing, spaces between them fills quickly. The principles of these arrest function came from that event. Pressure levels are increasing per cell as cells are accumulating. The pressure threshold stops phase transition. Similarly, volume limits dividing if cells can not achieve certain number of total volume. We suggest that change threshold and observe the tissue level behaviors.</li>
+    
+
+</ol>
+</p>
+
+
+<p>This model is developed and maintained by Furkan Kurtoglu, Aneequa Sundus and Dr. Paul Macklin. Cloud-hosted demo are part of a course on computational multicellular systems biology created and taught by 
+    Dr. Paul Macklin in the Department of Intelligent Systems Engineering at Indiana University. It is also part of the education 
+    and outreach for the IU Engineered nanoBIO Node and the NCI-funded cancer systems biology grant U01CA232137. 
+    The models are built using <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005991" target="_blank">PhysiCell</a>: 
+    a C++ framework for multicellular systems biology [1].</p>
+
+
+<h2><a id="instructions" name="instructions">Basic instructions</a></h2>
+
+<p>Modify parameters in the &quot;Config Basics&quot;, &quot;Microenvironment&quot;, &quot;User Params&quot;, or &quot;Cell Types&quot; tabs. Click the &quot;Run&quot; button once you are ready.</p>
+
+<p>To view the output results, click the &quot;Out: Plots&quot; tab, and move the slider bar to advance through simulation frames. 
+Note that as the simulation runs, the &quot;# cell frames&quot; field will increase, so you can view more simulation frames.</p>
+
+<p>If there are multiple substrates defined in the Microenvironment, you can select a different one from the drop-down widget in the Plots tab. You can also fix the colormap range of values.</p>
+
+<p>Note that you can download full simulation data for further exploration in your tools of choice. And you can also generate an animation of the cells to play in the browser and, optionally, download as a video.</p>
+
+<ul>
+    <li><b>Config Basics</b> tab:&nbsp;&nbsp;&nbsp;  input parameters common to all models (e.g., domain grid, simulation time, choice/frequency of outputs)</li>
+    <li><b>Microenvironment</b> tab:&nbsp;&nbsp; microenvironment parameters that are model-specific</li>
+    <li><b>User Params</b> tab:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; user parameters that are model-specific</li>
+    <li><b>Cell Types</b> tab:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; parameters for cell types that are model-specific</li>
+    <li><b>Out: Plots</b> tab:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; output display of cells and substrates</li>
+    <li><b>Animate</b> tab:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; generate an animation of cells</li>
+</ul>
+Clicking the 'Run' button will use the specified parameters and start a simulation. When clicked, it creates an "Output" widget
+that can be clicked/expanded to reveal the progress (text) of the simulation. When the simulation generates output files,
+they can be visualized in the "Out: Plots" tab. The "# cell frames" will be dynamically updated 
+as those output files are generated by the running simulation. When the "Run" button is clicked, it toggles to a "Cancel" button
+that will terminate (not pause) the simulation.
+
+
+<h3><strong>About the software: </strong></h3> 
+<p>
+This model and cloud-hosted demo are part of the education and outreach 
+    for the IU Engineered nanoBIO Node and the NCI-funded cancer systems biology grant U01CA232137. 
+    The models are built using PhysiCell: a C++ framework for multicellular systems biology [1] 
+    for the core simulation engine and xml2jupyter [2] to create the graphical user interface (GUI).</p>
+
+<ol>
+<li>
+<a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005991">A. Ghaffarizadeh, R. Heiland, S.H. Friedman, S.M. Mumenthaler, and P. Macklin. PhysiCell: an open source physics-based cell simulator for 3-D multicellular systems. PLoS Comput. Biol. 14(2):e1005991, 2018. DOI: 10.1371/journal.pcbi.1005991.</a> </li>
+<li>
+<a href="https://joss.theoj.org/papers/10.21105/joss.01408">R. Heiland, D. Mishler, T. Zhang, E. Bower, and P. Macklin. xml2jupyter: Mapping parameters between XML and Jupyter widgets. Journal of Open Source Software 4(39):1408, 2019. DOI: 10.21105/joss.01408.
+</li>
+</ol>

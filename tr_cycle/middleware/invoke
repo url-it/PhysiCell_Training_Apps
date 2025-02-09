@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/usr/bin/invoke_app "$@" -C "start_jupyter -A -T @tool Cycle_Training.ipynb" -t trcycle -u anaconda3-5.1
