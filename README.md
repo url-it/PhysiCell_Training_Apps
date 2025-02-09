@@ -14,6 +14,14 @@ Notable recognition:
 
 - [2019 PLoS Computational Biology Research Prize for Public Impact](https://biologue.plos.org/2019/05/31/announcing-the-winners-of-the-2019-plos-computational-biology-research-prize/)
 
+Study of PhysiCell:
+
+- [Aneequa Sundus, et al. “PhysiCell Training Apps: A Case Study for Creating Interactive Training Materials for Scientific Software Packages.” ](https://doi.org/10.1101/2022.06.24.497566)
+
+- [Heiland, Randy, et al. “PhysiCell Studio: A Graphical Tool to Make Agent-Based Modeling More Accessible.” ](https://doi.org/10.1101/2023.10.24.563727)
+
+- [Ghaffarizadeh, Ahmadreza, et al. “PhysiCell: An Open Source Physics-Based Cell Simulator for 3-D Multicellular Systems.” ](https://doi.org/10.1371/journal.pcbi.1005991)
+
 ## Installation
 
 No installation is required. All apps utlitze Google Colab, which is a free cloud-based Jupyter notebook environment. To run an app, you may simply copy the URL of the app and paste it into the Colab notebook URL field, specifically the Github option.
