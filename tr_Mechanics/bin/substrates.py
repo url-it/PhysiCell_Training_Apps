@@ -386,7 +386,7 @@ class SubstrateTab(object):
         row2 = HBox( [row2a, Label('.....'), row2b])
         self.running_message = widgets.HTML(
              value="<h2 style='color: red;'>Currently running, please wait...</h2>",
-             layout=widgets.Layout(display='none')  
+             layout=widgets.Layout(display='none') 
          )
  
         if self.colab_flag:
