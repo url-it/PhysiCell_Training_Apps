@@ -81,12 +81,16 @@ if xml_root.find('.//cell_definitions'):
 
 # svg = SVGTab()
 sub = SubstrateTab()
-animate_tab = AnimateTab()
+# animate_tab = AnimateTab()
 
 nanoHUB_flag = False
 if( 'HOME' in os.environ.keys() ):
     nanoHUB_flag = "home/nanohub" in os.environ['HOME']
 
+
+output_widget = widgets.Output()
+acc = widgets.Accordion(children = [output_widget])
+acc.set_title(0, 'Output')
 
 # callback when user selects a cached run in the 'Load Config' dropdown widget.
 # HOWEVER, beware if/when this is called after a sim finishes and the Load Config dropdown widget reverts to 'DEFAULT'.
@@ -256,6 +260,8 @@ def run_done_func_colab(s, rdir):
     run_button.description = "Run"
     run_button.button_style='success'
 
+    # Hiding msg
+    sub.running_message.layout.display = 'none'
 
 def run_done_func(s, rdir):
     # with debug_view:
@@ -282,12 +288,12 @@ def run_done_func(s, rdir):
     #     print('run_done_func: ---- after updating read_config.options')
 
     # sub.update_dropdown_fields("data")   # WARNING: fill in the substrate field(s)
-
+    sub.running_message.layout.display = 'none'
     # and update visualizations
     # svg.update(rdir)
     sub.update(rdir)
 
-    animate_tab.gen_button.disabled = False
+    # animate_tab.gen_button.disabled = False
 
     # with debug_view:
     #     print('RDF DONE')
@@ -298,7 +304,10 @@ def run_sim_func(s):
     # with debug_view:
     #     print('run_sim_func')
 
-    animate_tab.gen_button.disabled = True
+    # animate_tab.gen_button.disabled = True
+
+    # Adding my msg
+    sub.running_message.layout.display = 'block'
 
     # If cells or substrates toggled off in Config tab, toggle off in Plots tab
     if config_tab.toggle_svg.value == False:
@@ -387,32 +396,54 @@ def run_button_cb(s):
     # print("new_config_file = ", new_config_file)
 #    write_config_file(new_config_file)
 
-    # make sure we are where we started
-    os.chdir(homedir)
+    # Adding my msg
 
-    # remove any previous data
-    # NOTE: this dir name needs to match the <folder>  in /data/<config_file.xml>
-    os.system('rm -rf tmpdir*')
-    if os.path.isdir('tmpdir'):
-        # something on NFS causing issues...
-        tname = tempfile.mkdtemp(suffix='.bak', prefix='tmpdir_', dir='.')
-        shutil.move('tmpdir', tname)
-    os.makedirs('tmpdir')
+    with output_widget:
+        output_widget.clear_output()
+        print("Running myproj...")
 
-    # write the default config file to tmpdir
-    new_config_file = "tmpdir/config.xml"  # use Path; work on Windows?
-    write_config_file(new_config_file)  
 
-    tdir = os.path.abspath('tmpdir')
-    os.chdir(tdir)  # operate from tmpdir; temporary output goes here.  may be copied to cache later
-    # svg.update(tdir)
-    # sub.update_params(config_tab)
-    sub.update(tdir)
+        sub.running_message.layout.display = 'block'
 
-    run_button.description = "WAIT..."
-    subprocess.run(["../bin/myproj", "config.xml"])
-    sub.max_frames.value = int(config_tab.tmax.value / config_tab.svg_interval.value)    # 42
-    run_button.description = "Run"
+        
+        # make sure we are where we started
+        os.chdir(homedir)
+
+        # remove any previous data
+        # NOTE: this dir name needs to match the <folder>  in /data/<config_file.xml>
+        os.system('rm -rf tmpdir*')
+        if os.path.isdir('tmpdir'):
+            # something on NFS causing issues...
+            tname = tempfile.mkdtemp(suffix='.bak', prefix='tmpdir_', dir='.')
+            shutil.move('tmpdir', tname)
+        os.makedirs('tmpdir')
+
+        # write the default config file to tmpdir
+        new_config_file = "tmpdir/config.xml"  # use Path; work on Windows?
+        write_config_file(new_config_file)  
+
+        tdir = os.path.abspath('tmpdir')
+        os.chdir(tdir)  # operate from tmpdir; temporary output goes here.  may be copied to cache later
+        # svg.update(tdir)
+        # sub.update_params(config_tab)
+        sub.update(tdir)
+
+        run_button.description = "WAIT..."
+        # CHANGED HERE FOR LOCAL MYPROJ
+        process = subprocess.Popen(["../bin/myproj", "config.xml"],
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE,
+                                   universal_newlines=True)
+        
+        for l in process.stdout:
+            print(l, end="")
+        for l in process.stderr:
+            print(l, end="")
+        process.wait()
+        sub.max_frames.value = int(config_tab.tmax.value / config_tab.svg_interval.value)    # 42
+        run_button.description = "Run"
+
+        sub.running_message.layout.display = 'none'
 
 #-------------------------------------------------
 if nanoHUB_flag:
@@ -453,12 +484,12 @@ tab_layout = widgets.Layout(width='auto',height=tab_height, overflow_y='scroll',
 
 if xml_root.find('.//cell_definitions'):
     titles = ['About', 'Config Basics', 'Microenvironment', 'User Params', 'Cell Types', 'Out: Plots', 'Animate']
-    tabs = widgets.Tab(children=[about_tab.tab, config_tab.tab, microenv_tab.tab, user_tab.tab, cell_types_tab.tab, sub.tab, animate_tab.tab],
+    tabs = widgets.Tab(children=[about_tab.tab, config_tab.tab, microenv_tab.tab, user_tab.tab, cell_types_tab.tab, sub.tab],
                    _titles={i: t for i, t in enumerate(titles)},
                    layout=tab_layout)
 else:
     titles = ['About', 'Config Basics', 'Microenvironment', 'User Params', 'Out: Plots', 'Animate']
-    tabs = widgets.Tab(children=[about_tab.tab, config_tab.tab, microenv_tab.tab, user_tab.tab, sub.tab, animate_tab.tab],
+    tabs = widgets.Tab(children=[about_tab.tab, config_tab.tab, microenv_tab.tab, user_tab.tab, sub.tab],
                    _titles={i: t for i, t in enumerate(titles)},
                    layout=tab_layout)
 
@@ -474,7 +505,7 @@ if False:
     fill_gui_params(read_config.options['DEFAULT'])
 else:
     top_row = widgets.HBox(children=[tool_title])
-    gui = widgets.VBox(children=[top_row, tabs, run_button])
+    gui = widgets.VBox(children=[top_row, tabs, acc,run_button])
     fill_gui_params("data/PhysiCell_settings.xml")
 
 

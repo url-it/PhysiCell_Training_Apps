@@ -31,6 +31,7 @@ from debug import debug_view
 import warnings
 import traceback
 import sys
+import ipywidgets as widgets
 
 hublib_flag = True
 if platform.system() != 'Windows':
@@ -241,7 +242,10 @@ class SubstrateTab(object):
             disabled = True, 
             value=True, style = {'description_width': 'initial'} )
 
-        # self.field_min_max = {'assembled_virion':[0.,1.,False]  }
+        ########
+        # In case: I readded this 
+        #######
+        self.field_min_max = {'assembled_virion':[0.,1.,False]  }
         # hacky I know, but make a dict that's got (key,value) reversed from the dict in the Dropdown below
 
         # ipywidgets 8 docs: Selection widgets no longer accept a dictionary of options. Pass a list of key-value pairs instead.
@@ -588,6 +592,12 @@ class SubstrateTab(object):
 
         controls_box = HBox([cells_vbox, substrate_vbox, analysis_data_hbox], justify_content='center')  # vs. 'flex-start   , layout=Layout(width='900px'))
 
+        self.running_message = widgets.HTML(
+             value="<h2 style='color: red;'>Currently running, please wait...</h2>",
+             layout=widgets.Layout(display='none')  
+         )
+ 
+
         if self.colab_flag:
             self.download_button = Button(
                 description='Download mcds.zip',
@@ -606,8 +616,9 @@ class SubstrateTab(object):
             download_row = HBox([self.download_button, self.download_svg_button])
             # box_layout = Layout(border='0px solid')
             # controls_box = VBox([row1, row2])  # ,width='50%', layout=box_layout)
-            self.tab = VBox([controls_box, self.i_plot, download_row])
+            self.tab = VBox([controls_box, self.running_message,self.i_plot, download_row])
 
+            
         elif (hublib_flag):
             self.download_button = Download('mcds.zip', style='warning', icon='cloud-download', 
                                                 tooltip='Download MCDS data', cb=self.download_cb)
@@ -955,7 +966,7 @@ class SubstrateTab(object):
     # def update_analysis_data(self,b):
     def update_analysis_data(self):
         # print('----- update_analysis_data')
-        print('rwh: update_analysis_data(): self.output_dir = ', self.output_dir)
+        # print('rwh: update_analysis_data(): self.output_dir = ', self.output_dir)
 
         # If we've already computed the plots being requested, just return.
         # if ('live' in self.analysis_data_choice.value) and self.analysis_data_set1:
@@ -976,7 +987,7 @@ class SubstrateTab(object):
         cwd = os.getcwd()
         # print("----- cwd(1)=",cwd)
         data_dir = cwd
-        print("----- data_dir(1)=",cwd)
+        # print("----- data_dir(1)=",cwd)
 
         if 'cache' in self.output_dir:
             data_dir = self.output_dir
@@ -988,13 +999,13 @@ class SubstrateTab(object):
                 data_dir = os.path.abspath('tmpdir')
                 # print("----- data_dir(3)=",cwd)
 
-        print("----- rwh: data_dir=",data_dir)
+        # print("----- rwh: data_dir=",data_dir)
         os.chdir(data_dir)
 
         xml_files = glob.glob('output*.xml')
         # xml_files = glob.glob(os.path.join('tmpdir', 'output*.xml'))
         xml_files.sort()
-        print('update_analysis_data(): len(xml_files)=',len(xml_files))
+        # print('update_analysis_data(): len(xml_files)=',len(xml_files))
         # print('xml_files = ',xml_files)
         # print("----- chdir back to cwd=",cwd)
         # os.chdir(cwd)
@@ -1022,9 +1033,10 @@ class SubstrateTab(object):
         if xname == self.tname:
             self.xval = tval
             # print("xname == self.tname")
-            print("#1 self.xval=",self.xval)
+            # print("#1 self.xval=",self.xval)
         else:
             print("Warning: xname != self.tname")
+            # pass
         voxel_size = mcds[0].data['mesh']['voxels']['volumes'][0]
         self.analysis_data_wait.value = 'compute 1-3...'
         # print(np.array( [(mcds[idx].data['continuum_variables']['chemical_A'])  for idx in range(ds_count)] ).astype(float))

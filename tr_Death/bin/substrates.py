@@ -20,6 +20,7 @@ import platform
 import zipfile
 from debug import debug_view 
 import warnings
+import ipywidgets as widgets
 
 hublib_flag = True
 if platform.system() != 'Windows':
@@ -428,6 +429,13 @@ class SubstrateTab(object):
                             display='flex')) 
         # row2 = HBox( [row2a, self.substrates_toggle, self.grid_toggle])
         row2 = HBox( [row2a, Label('.....'), row2b])
+
+
+        self.running_message = widgets.HTML(
+            value="<h2 style='color: red;'>Currently running, please wait...</h2>",
+            layout=widgets.Layout(display='none')  
+        )
+
         if self.colab_flag:
             self.download_button = Button(
                 description='Download mcds.zip',
@@ -446,12 +454,13 @@ class SubstrateTab(object):
             download_row = HBox([self.download_button, self.download_svg_button])
             # box_layout = Layout(border='0px solid')
             controls_box = VBox([row1, row2])  # ,width='50%', layout=box_layout)
-            self.tab = VBox([controls_box, self.i_plot, download_row])
+            self.tab = VBox([controls_box, self.running_message,self.i_plot, download_row])
+
 
         elif (hublib_flag):
             self.download_button = Download('mcds.zip', style='warning', icon='cloud-download', 
                                                 tooltip='Download data', cb=self.download_cb)
-
+            
             self.download_svg_button = Download('svg.zip', style='warning', icon='cloud-download', 
                                             tooltip='You need to allow pop-ups in your browser', cb=self.download_svg_cb)
 
@@ -467,6 +476,7 @@ class SubstrateTab(object):
         else:
             # self.tab = VBox([row1, row2])
             self.tab = VBox([row1, row2, self.i_plot])
+
 
     #---------------------------------------------------
     def update_dropdown_fields(self, data_dir):
