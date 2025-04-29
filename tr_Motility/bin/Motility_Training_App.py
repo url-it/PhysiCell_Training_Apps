@@ -226,6 +226,7 @@ def run_done_func_colab(s, rdir):
     run_button.description = "Run"
     run_button.button_style='success'
     sub.running_message.layout.display = 'none'
+    # sub.gen_pngs()
 
 def run_done_func(s, rdir):
     # with debug_view:
@@ -256,6 +257,8 @@ def run_done_func(s, rdir):
     # and update visualizations
     # svg.update(rdir)
     sub.update(rdir)
+
+    sub.gen_pngs()
 
 
     # with debug_view:
@@ -333,6 +336,18 @@ def outcb(s):
         sub.update()
     return s
 
+def find(name, path):
+    for root, dirs, files in os.walk(path):
+        if name in files:
+            return os.path.join(root, name)
+        
+myprojPath = find("myproj", os.getcwd())
+if myprojPath:
+    subprocess.run(["chmod", "+x", myprojPath], check=True)
+    print(f"Executable permissions granted for: {myprojPath}")
+else:
+    print("Error: 'myproj' file not found in the specified path.")
+
 
 def run_button_cb(s):
     """
@@ -370,7 +385,8 @@ def run_button_cb(s):
         sub.update(tdir)
 
         run_button.description = "WAIT..."
-        process = subprocess.Popen(["../bin/myproj", "config.xml"],
+        path = "/content/Motility_Training_App/bin/myproj"
+        process = subprocess.Popen([path, "config.xml"],
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE,
                                    universal_newlines=True)

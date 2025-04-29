@@ -43,6 +43,7 @@ warnings.filterwarnings("ignore")
 class SubstrateTab(object):
 
     def __init__(self):
+        self.png_frame=0;
         
         self.output_dir = '.'
         # self.output_dir = 'tmpdir'
@@ -70,7 +71,7 @@ class SubstrateTab(object):
         self.max_substrate_frame_pre_therapy = 1000000
 
         self.svg_xmin = 0
-
+    
         # Probably don't want to hardwire these if we allow changing the domain size
         # self.svg_xrange = 2000
         # self.xmin = -1000.
@@ -111,7 +112,7 @@ class SubstrateTab(object):
         max_frames = 1   
         # self.mcds_plot = interactive(self.plot_substrate, frame=(0, max_frames), continuous_update=False)  
         # self.i_plot = interactive(self.plot_plots, frame=(0, max_frames), continuous_update=False)  
-        self.i_plot = interactive(self.plot_substrate, frame=(0, max_frames), continuous_update=False)  
+        self.i_plot = interactive(lambda frame: self.plot_substrate(frame), frame=(0, max_frames), continuous_update=False)  
 
         # "plot_size" controls the size of the tab height, not the plot (rf. figsize for that)
         # NOTE: the Substrates Plot tab has an extra row of widgets at the top of it (cf. Cell Plots tab)
@@ -451,7 +452,14 @@ class SubstrateTab(object):
             )
             self.download_svg_button.on_click(self.download_local_svg_cb)
 
-            download_row = HBox([self.download_button, self.download_svg_button])
+            self.download_png_button = Button(
+                description='Download PNGs',
+                button_style='success',
+                tooltip='Download all PNG files as a zip',
+            )
+            self.download_png_button.on_click(self.download_png_cb)
+
+            download_row = HBox([self.download_button, self.download_svg_button, self.download_png_button])
             # box_layout = Layout(border='0px solid')
             controls_box = VBox([row1, row2])  # ,width='50%', layout=box_layout)
             self.tab = VBox([controls_box, self.running_message,self.i_plot, download_row])
@@ -627,6 +635,7 @@ class SubstrateTab(object):
                 self.max_frames.value = int(last_file[-12:-4])
 
     def download_local_svg_cb(self,s):
+        # self.save_png()
         file_str = os.path.join(self.output_dir, '*.svg')
         # print('zip up all ',file_str)
         with zipfile.ZipFile('svg.zip', 'w') as myzip:
@@ -635,6 +644,17 @@ class SubstrateTab(object):
 
         if self.colab_flag:
             files.download('svg.zip')
+
+    def download_png_cb(self,s):
+        self.save_png()
+        file_str = os.path.join(self.output_dir, '*.png')
+        # print('zip up all ',file_str)
+        with zipfile.ZipFile('png.zip', 'w') as myzip:
+            for f in glob.glob(file_str):
+                myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename path in the archive
+
+        if self.colab_flag:
+            files.download('png.zip')
 
     def download_local_cb(self,s):
         file_xml = os.path.join(self.output_dir, '*.xml')
@@ -650,6 +670,7 @@ class SubstrateTab(object):
             files.download('mcds.zip')
 
     def download_svg_cb(self):
+    
         file_str = os.path.join(self.output_dir, '*.svg')
         # print('zip up all ',file_str)
         with zipfile.ZipFile('svg.zip', 'w') as myzip:
@@ -1004,7 +1025,7 @@ class SubstrateTab(object):
     #---------------------------------------------------------------------------
     # assume "frame" is cell frame #, unless Cells is togggled off, then it's the substrate frame #
     # def plot_substrate(self, frame, grid):
-    def plot_substrate(self, frame):
+    def plot_substrate(self, frame, force_plot=False):
         # global current_idx, axes_max, gFileId, field_index
 
         # print("plot_substrate(): frame*self.substrate_delta_t  = ",frame*self.substrate_delta_t)
@@ -1024,7 +1045,7 @@ class SubstrateTab(object):
 
         # if (self.substrates_toggle.value and frame*self.substrate_delta_t <= self.svg_frame*self.svg_delta_t):
         # if (self.substrates_toggle.value and (frame % self.modulo == 0)):
-        if (self.substrates_toggle.value):
+        if (self.substrates_toggle.value or force_plot):
             # self.fig = plt.figure(figsize=(14, 15.6))
             # self.fig = plt.figure(figsize=(15.0, 12.5))
             self.fig = plt.figure(figsize=(self.figsize_width_substrate, self.figsize_height_substrate))
@@ -1223,9 +1244,25 @@ class SubstrateTab(object):
         # oxy_ax = self.fig.add_subplot(grid[3:4, 0:1])  # nrows, ncols
         # x = np.linspace(0, 500)
         # oxy_ax.plot(x, 300*np.sin(x))
+        #self.png_frame += 1 
+        
+        #png_file = os.path.join(self.output_dir, f"frame{self.png_frame:04d}.png")
+        #self.fig.savefig(png_file)
+        if (force_plot==False):
+            plt.show()   # rwh: for Colab
+   
 
-        plt.show()   # rwh: for Colab
+    def save_png(self):
 
+        for frame in range(self.max_frames.value):
+            
+            self.plot_substrate(frame, force_plot=True)
+            self.png_frame += 1 
+            png_file = os.path.join(self.output_dir, f"frame{self.png_frame:04d}.png")
+            self.fig.savefig(png_file)
+            plt.close(self.fig)
+        self.png_frame=0
+   
 
     #---------------------------------------------------------------------------
     # def plot_plots(self, frame):
