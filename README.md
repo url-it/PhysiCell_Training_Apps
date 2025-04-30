@@ -6,7 +6,7 @@ This repository contains a collection of training apps for PhysiCell. Each app i
 
 The following links provide access to the apps on Google Colab:
 
-1. [Cell Mechanics](https://colab.research.google.com/drive/1VFMCSEQhx6b_JTv5qCa0sCvqxAHOhipn?copy=true)
+1. [Cell Mechanics](https://colab.research.google.com/drive/1lfXmANTLLQzG76WvSdxhgP41vw8qXWEF?usp=sharing)
 2. [Cell Microenviroment](https://colab.research.google.com/drive/13OHeM3d2Y6VAGK2XNvCwyuYOJfDM3eum?copy=true)
 3. [Cell Motility](https://colab.research.google.com/drive/1F31DfDhyV3cwY-7_XeqRT4w5fK2v8MSi?copy=true)
 4. [Cell Secretion](https://colab.research.google.com/drive/1X6Vqu28H7jkshhML_P9pC6ba0GkJkLPb?copy=true)
